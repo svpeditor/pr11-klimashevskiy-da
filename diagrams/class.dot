@@ -1,14 +1,23 @@
 digraph C {
-graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.4];
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.5];
 node [shape=record, style="filled", fontname="Times New Roman", fontsize=10, color="#2F5597", fillcolor="#F7FBFF"];
 edge [fontname="Times New Roman", fontsize=9, color="#555555"];
-p [label="{ClientCsvParser\nTODO||+ parse(String,int) ClientDraft\l}", fillcolor="#FDE9E7", color="#C00000"];
-v [label="{ClientValidator\nTODO||+ validate(ClientDraft) ValidationResult\l}", fillcolor="#FDE9E7", color="#C00000"];
-i [label="{ClientImporter\nTODO|- parser\l- validator\l- repository\l|+ importFile(Path) ImportResult\l}", fillcolor="#FDE9E7", color="#C00000"];
-r [label="{ClientRepository||+ save(Client)\l+ findByInn(String)\l}", fillcolor="#F7FBFF", color="#2F5597"];
-res [label="{ImportResult|- accepted int\l- errors List[ImportError]\l|+ addAccepted()\l+ addError(...)\l}", fillcolor="#F7FBFF", color="#2F5597"];
+i [label="{ClientImporter|- parser ClientCsvParser\l- validator ClientValidator\l- repository ClientRepository\l|+ ClientImporter(ClientRepository)\l+ importFile(Path) ImportResult throws IOException\l- importLine(String, int, ImportResult) void\l}"];
+p [label="{ClientCsvParser|+ SEPARATOR = \";\"\l|+ parse(String, int) ClientDraft\l}"];
+v [label="{ClientValidator|+ MAX_NAME_LENGTH = 25\l|+ validate(ClientDraft) List[String]\l- isEmail(String) boolean\l}"];
+r [label="{ClientRepository|- data Map[String,Client]\l|+ save(Client) void\l+ findByInn(String) Client\l+ size() int\l}"];
+res [label="{ImportResult|- accepted int\l- errors List[ImportError]\l|+ addAccepted() void\l+ addError(ImportError) void\l+ accepted() int\l+ rejected() int\l+ errors() List[ImportError]\l}"];
+err [label="{«record» ImportError|- lineNumber int\l- message String\l}"];
+lex [label="{ImportLineException|- lineNumber int\l|+ getLineNumber() int\l}"];
+d [label="{«record» ClientDraft|- inn String\l- name String\l- email String\l}"];
+c [label="{«record» Client|- inn String\l- name String\l- email String\l}"];
 i -> p [label="1",arrowtail=odiamond,dir=both];
 i -> v [label="1",arrowtail=odiamond,dir=both];
 i -> r [label="1",arrowtail=odiamond,dir=both];
 i -> res [label="returns",style=dashed,arrowhead=open];
+res -> err [label="0..*",arrowtail=diamond,dir=both];
+p -> d [label="creates",style=dashed,arrowhead=open];
+p -> lex [label="throws",style=dashed,arrowhead=open];
+v -> d [label="checks",style=dashed,arrowhead=open];
+r -> c [label="0..*",arrowtail=odiamond,dir=both];
 }
