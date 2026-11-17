@@ -1,0 +1,17 @@
+inn;name;email
+7701234567;Alpha LLC;office@alpha.ru
+770123456789;Gamma Trade;sales@gamma.ru
+770123456;Short Inn;a@short.ru
+77012345678;Eleven Inn;b@eleven.ru
+7701234567;Alpha Copy;copy@alpha.ru
+77012345AB;Letters;c@letters.ru
+7702000000;;empty@name.ru
+7702000001;Siberian Wood Company Ltd;wood@sib.ru
+7702000002;Siberian Wood Company Ltd.;wood2@sib.ru
+7702000003;Double At;user@@mail.ru
+7702000004;No Left;@mail.ru
+7702000005;No Right;user@
+7702000006;Too;many;fields
+7702000007;Two fields
+
+7702000008;Last Good;good@last.ru
