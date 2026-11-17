@@ -15,6 +15,7 @@ public class SelfCheck {
         checkParser();
         checkValidator();
         checkImporter();
+        checkVariant();
         System.out.println("Unit: " + passed + "/" + count + " passed");
         // свои файлы: java -cp out ru.edu.pr08.SelfCheck data/a.csv data/b.csv
         if (args.length == 0) {
@@ -80,6 +81,17 @@ public class SelfCheck {
         }
         check("missing file", failed);
         check("errors copy", !tryChangeErrors(r));
+    }
+
+    private static void checkVariant() throws IOException {
+        // вариант 4: наименование обязательно и не длиннее 25 символов
+        check("variant max 25", ClientValidator.MAX_NAME_LENGTH == 25);
+        check("variant name 25", valid("7701234567", "Siberian Wood Company Ltd", "a@b.ru"));
+        check("variant name 26", !valid("7701234567", "Siberian Wood Company Ltd.", "a@b.ru"));
+        check("variant name empty", !valid("7701234567", "", "a@b.ru"));
+        check("variant name spaces", !valid("7701234567", new ClientCsvParser().parse("7701234567;   ;a@b.ru", 2).name(), "a@b.ru"));
+        ImportResult r = importLines("inn;name;email", "7701234567;;a@b.ru", "7702000000;Gamma;g@g.ru");
+        check("variant import", r.accepted() == 1 && r.errors().get(0).message().contains("наименование"));
     }
 
     // ---------- вспомогательные методы ----------
